@@ -15,9 +15,10 @@ int maxNumber;
 int number1;
 int number2;
 
+//main game loop
 do
 {
-    correctAnswers = 0;
+    correctAnswers = 0; //resetting the score each time the game starts
     DisplayMenu();
     int gameMode = int.Parse(Console.ReadLine());
     switch (gameMode)
@@ -69,7 +70,7 @@ void DisplayMenu()
     Console.WriteLine("1. Addition\n2. Subtraction\n3. Multiplication\n4. Division\n5. Game History\n6. Exit");
     Console.WriteLine("-----------------------------------------");
 }
-void GameSetup()
+void GameSetup() //this function is used to determine the number of rounds and enable hard mode
 {
     Console.WriteLine("Enter the number of rounds you want to play:");
     bool validAnswer = false;
@@ -103,7 +104,7 @@ void Addition()
     stopwatch.Start();
     for (int i = 0; i < roundsAmount; i++)
     {
-        number1 = random.Next(1, maxNumber);
+        number1 = random.Next(1, maxNumber); //maxNumber value is assigned in GameSetup function, depending on the game mode
         number2 = random.Next(1, maxNumber);
         Console.WriteLine($"{number1}+{number2}");
 
@@ -213,6 +214,7 @@ void Multiplication()
 }
 void Division()
 {
+    //maxNumber is set manually in this case to make the possible equation pool larger
     if (hardMode)
     {
         maxNumber = 1000; 
