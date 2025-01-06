@@ -39,7 +39,7 @@ do
             Multiplication();
             break;
         case 4:
-            Console.WriteLine("You selected Division."); ;
+            Console.WriteLine("You selected Division.");
             GameSetup();
             Division();
             break;
