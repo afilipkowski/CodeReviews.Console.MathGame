@@ -1,49 +1,74 @@
 ﻿//Math Game - Console App for The C# Academy
 //Author: afilipkowski
+using System.Diagnostics;
 
-DisplayMenu();
-int gameMode = int.Parse(Console.ReadLine());
+//setting up necessary variables
 Random random = new Random();
+Stopwatch stopwatch = new Stopwatch();
+
+List<string> gameHistory = new List<string>();
 int roundsAmount;
+int correctAnswers;
 bool hardMode = false;
+bool keepPlaying = true;
 int maxNumber;
+int number1;
+int number2;
 
-switch (gameMode)
+do
 {
-    case 1:
-        Console.WriteLine("You selected Addition.");
-        GameSetup();
-        Addition();
-        break;
-    case 2:
-        Console.WriteLine("You selected Subtraction.");
-        GameSetup();
-        Subtraction();
-        break;
-    case 3:
-        Console.WriteLine("You selected Multiplication.");
-        GameSetup();
-        Multiplication();
-        break;
-    case 4:
-        Console.WriteLine("You selected Division."); ;
-        GameSetup();
-        break;
-    default:
-        Console.WriteLine("Invalid game mode");
-        break;
-}
+    correctAnswers = 0;
+    DisplayMenu();
+    int gameMode = int.Parse(Console.ReadLine());
+    switch (gameMode)
+    {
+        case 1:
+            Console.WriteLine("You selected Addition.");
+            GameSetup();
+            Addition();
+            break;
+        case 2:
+            Console.WriteLine("You selected Subtraction.");
+            GameSetup();
+            Subtraction();
+            break;
+        case 3:
+            Console.WriteLine("You selected Multiplication.");
+            GameSetup();
+            Multiplication();
+            break;
+        case 4:
+            Console.WriteLine("You selected Division."); ;
+            GameSetup();
+            Division();
+            break;
+        case 5:
+            Console.WriteLine("You selected Game History.");
+            foreach (string game in gameHistory)
+            {
+                Console.WriteLine(game);
+            }
+            break;
+        case 6:
+            Console.WriteLine("You selected Exit.");
+            keepPlaying = false;
+            break;
+        default:
+            Console.WriteLine("Invalid game mode");
+            break;
+    }
+} while (keepPlaying);
+
+Console.WriteLine("Press any key to close the window");
 Console.ReadLine();
-
-
 void DisplayMenu()
 {
     string welcomeMessage = "Welcome to the Math Game!";
     Console.WriteLine("--------" + welcomeMessage + "--------");
     Console.WriteLine("Choose game mode:");
-    Console.WriteLine("1. Addition\n2. Subtraction\n3. Multiplication\n4. Division");
+    Console.WriteLine("1. Addition\n2. Subtraction\n3. Multiplication\n4. Division\n5. Game History\n6. Exit");
+    Console.WriteLine("-----------------------------------------");
 }
-
 void GameSetup()
 {
     Console.WriteLine("Enter the number of rounds you want to play:");
@@ -56,6 +81,7 @@ void GameSetup()
             Console.WriteLine("Invalid input. Please enter a number.");
         }
     } while (validAnswer == false);
+
     Console.WriteLine("Do you want to play in hard mode? (y/n)");
     string hardModeAnswer = Console.ReadLine();
     if (hardModeAnswer.ToLower() == "y")
@@ -74,10 +100,11 @@ void GameSetup()
 }
 void Addition()
 {
+    stopwatch.Start();
     for (int i = 0; i < roundsAmount; i++)
     {
-        int number1 = random.Next(1, maxNumber);
-        int number2 = random.Next(1, maxNumber);
+        number1 = random.Next(1, maxNumber);
+        number2 = random.Next(1, maxNumber);
         Console.WriteLine($"{number1}+{number2}");
 
         int answer;
@@ -94,20 +121,26 @@ void Addition()
         if (answer == number1 + number2)
         {
             Console.WriteLine("Correct!");
+            correctAnswers++;
         }
         else
         {
             Console.WriteLine("Incorrect!");
         }
     }
-
+    stopwatch.Stop();
+    TimeSpan ts = stopwatch.Elapsed;
+    Console.WriteLine($"You answered {correctAnswers} questions correctly out of {roundsAmount}!");
+    Console.WriteLine($"It took you {ts.Seconds},{ts.Milliseconds/10} seconds to complete the game.");
+    gameHistory.Add($"{DateTime.Now} - Addition - {(hardMode ? "Hard mode" : "Normal mode")} -  Score:{correctAnswers}/{roundsAmount}");
 }
 void Subtraction()
 {
+    stopwatch.Start();
     for (int i = 0; i < roundsAmount; i++)
     {
-        int number1 = random.Next(1, maxNumber);
-        int number2 = random.Next(1, maxNumber);
+        number1 = random.Next(1, maxNumber);
+        number2 = random.Next(1, maxNumber);
         Console.WriteLine($"{number1}-{number2}");
 
         int answer;
@@ -124,12 +157,19 @@ void Subtraction()
         if (answer == number1 - number2)
         {
             Console.WriteLine("Correct!");
+            correctAnswers++;
         }
         else
         {
             Console.WriteLine("Incorrect!");
         }
     }
+    stopwatch.Stop();
+    TimeSpan ts = stopwatch.Elapsed;
+    Console.WriteLine($"You answered {correctAnswers} questions correctly out of {roundsAmount}!");
+    Console.WriteLine($"It took you {ts.Seconds},{ts.Milliseconds / 10} seconds to complete the game.");
+    gameHistory.Add($"{DateTime.Now} - Subtraction - {(hardMode ? "Hard mode" : "Normal mode")} - Score:{correctAnswers}/{roundsAmount}");
+
 }
 void Multiplication()
 {
@@ -137,10 +177,11 @@ void Multiplication()
     {
         maxNumber -= 80; //to keep hard mode from being too hard
     }
+    stopwatch.Start();
     for (int i = 0; i < roundsAmount; i++)
     {
-        int number1 = random.Next(1, maxNumber);
-        int number2 = random.Next(1, maxNumber);
+        number1 = random.Next(1, maxNumber);
+        number2 = random.Next(1, maxNumber);
         Console.WriteLine($"{number1}*{number2}");
 
         int answer;
@@ -157,10 +198,65 @@ void Multiplication()
         if (answer == number1 * number2)
         {
             Console.WriteLine("Correct!");
+            correctAnswers++;
         }
         else
         {
             Console.WriteLine("Incorrect!");
         }
     }
+    stopwatch.Stop();
+    TimeSpan ts = stopwatch.Elapsed;
+    Console.WriteLine($"You answered {correctAnswers} questions correctly out of {roundsAmount}!");
+    Console.WriteLine($"It took you {ts.Seconds},{ts.Milliseconds / 10} seconds to complete the game.");
+    gameHistory.Add($"{DateTime.Now} - Multiplication - {(hardMode ? "Hard mode" : "Normal mode")} - Score:{correctAnswers}/{roundsAmount}");
+}
+void Division()
+{
+    if (hardMode)
+    {
+        maxNumber = 1000; 
+    }
+    else
+    {
+        maxNumber = 100;
+    }
+    stopwatch.Start();
+    for (int i = 0; i < roundsAmount; i++)
+    {
+        do
+        {
+            number1 = random.Next(1, maxNumber);
+            number2 = random.Next(1, maxNumber);
+        }
+        while (number1 % number2 != 0);
+
+        Console.WriteLine($"{number1}/{number2}");
+
+        int answer;
+        bool validAnswer = false;
+        do
+        {
+            validAnswer = int.TryParse(Console.ReadLine(), out answer);
+            if (validAnswer == false)
+            {
+                Console.WriteLine("Invalid input. Please enter a number.");
+            }
+        } while (validAnswer == false);
+
+        if (answer == number1 / number2)
+        {
+            Console.WriteLine("Correct!");
+            correctAnswers++;
+        }
+        else
+        {
+            Console.WriteLine("Incorrect!");
+        }
+    }
+    stopwatch.Stop();
+    TimeSpan ts = stopwatch.Elapsed;
+    Console.WriteLine($"You answered {correctAnswers} questions correctly out of {roundsAmount}!");
+    Console.WriteLine($"It took you {ts.Seconds},{ts.Milliseconds / 10} seconds to complete the game.");
+    gameHistory.Add($"{DateTime.Now} - Division - {(hardMode? "Hard mode" : "Normal mode")} - Score:{correctAnswers}/{roundsAmount}");
 }
